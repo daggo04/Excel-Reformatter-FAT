@@ -2,19 +2,17 @@ package com.eyeshare.Dag;
 
 import javax.swing.SwingUtilities;
 
-import com.eyeshare.Dag.view.ExcelReformatterGUI;
-import com.eyeshare.Dag.handlers.ExcelHandler;
+import com.eyeshare.Dag.functionality.ExcelReformatter;
+import com.eyeshare.Dag.profiles.ProfileManager;
+import com.eyeshare.Dag.view.MainFrame;
 
 public class Main {
     public static void main(String[] args) {
-        // SwingUtilities.invokeLater(() -> {
-        //     new ExcelReformatterGUI().setVisible(true);
-        // });
-    
-    
-        String inputFilePath = "test_input/Fakturavtale(95).xlsx";
-        String outputFolderPath = "test_output";
-        String outputFileName = "OutputFile.xlsx";
+        ProfileManager profileManager = new ProfileManager();
 
+        SwingUtilities.invokeLater(() -> {
+            MainFrame mainFrame = new MainFrame(profileManager);
+            mainFrame.setVisible(true);
+        });
     }
 }

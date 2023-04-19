@@ -1,4 +1,4 @@
-package com.eyeshare.Dag.handlers;
+package com.eyeshare.Dag.functionality;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -89,19 +89,10 @@ public class ExcelHandler {
         }
         closeWorkbooks();
     }
-
-    public void mergeTemplateOutput() {
-        output = new XSSFWorkbook();
-        for (int i = 0; i < template.getNumberOfSheets(); i++) {
-            Sheet templateSheet = template.getSheetAt(i);
-            Sheet outputSheet = output.createSheet(templateSheet.getSheetName());
-            copySheet(templateSheet, outputSheet);
-        }
-    }
     
-    public void copyRows(int sourceSheetIndex, int targetSheetIndex, int startRow, int endRow) {
-        Sheet sourceSheet = source.getSheetAt(sourceSheetIndex);
-        Sheet targetSheet = output.getSheetAt(targetSheetIndex);
+    public void copyRows(int srcSheet, int dstSheet, int startRow, int endRow) {
+        Sheet sourceSheet = source.getSheetAt(srcSheet);
+        Sheet targetSheet = output.getSheetAt(dstSheet);
     
         for (int i = startRow; i <= endRow; i++) {
             Row sourceRow = sourceSheet.getRow(i);
@@ -110,9 +101,9 @@ public class ExcelHandler {
         }
     }
     
-    public void copyColumn(int sourceSheetIndex, int sourceColumn, int targetSheetIndex, int targetColumn, int startRow) {
-        Sheet sourceSheet = source.getSheetAt(sourceSheetIndex);
-        Sheet targetSheet = output.getSheetAt(targetSheetIndex);
+    public void copyColumn(int srcSheet, int srcCol, int dstSheet, int dstCol, int startRow) {
+        Sheet sourceSheet = source.getSheetAt(srcSheet);
+        Sheet targetSheet = output.getSheetAt(dstSheet);
         int lastRowNum = sourceSheet.getLastRowNum();
     
         for (int i = startRow; i <= lastRowNum; i++) {
@@ -120,24 +111,24 @@ public class ExcelHandler {
             Row targetRow = targetSheet.getRow(i);
     
             if (sourceRow != null) {
-                Cell sourceCell = sourceRow.getCell(sourceColumn);
+                Cell sourceCell = sourceRow.getCell(srcCol);
                 if (targetRow == null) {
                     targetRow = targetSheet.createRow(i);
                 }
-                Cell targetCell = targetRow.createCell(targetColumn);
+                Cell targetCell = targetRow.createCell(dstCol);
                 copyCell(sourceCell, targetCell);
             }
         }
     }
 
-    public void copySplitRow(int sourceSheetIndex, int targetSheetIndex, int startRow, HashMap<Integer, Integer> columnMap, boolean includeHeaders, int headerCol) {
-        Sheet sourceSheet = source.getSheetAt(sourceSheetIndex);
-        Sheet targetSheet = output.getSheetAt(targetSheetIndex);
+    public void copySplitRow(int srcSheet, int dstSheet, int startRow, Map<Integer, Integer> colMap, boolean includeHeaders, int headerCol) {
+        Sheet sourceSheet = source.getSheetAt(srcSheet);
+        Sheet targetSheet = output.getSheetAt(dstSheet);
     
         int lastSourceRow = sourceSheet.getLastRowNum();
         int targetRowIdx = startRow;
 
-        HashMap<Integer, List<Integer>> invertedColMap = invertColumnMap(columnMap);
+        HashMap<Integer, List<Integer>> invertedColMap = invertcolMap(colMap);
         System.out.println(invertedColMap);
         
         int splits = 1;
@@ -177,12 +168,6 @@ public class ExcelHandler {
             }
         }
     
-    
-    
-    
-    
-
-    
     //Helper methods
     private void copyCell(Cell sourceCell, Cell destinationCell) {
         if (sourceCell == null) {
@@ -218,14 +203,6 @@ public class ExcelHandler {
         }
     }
 
-    private void copySheet(Sheet sourceSheet, Sheet destinationSheet) {
-        for (int i = 0; i <= sourceSheet.getLastRowNum(); i++) {
-            Row sourceRow = sourceSheet.getRow(i);
-            if (sourceRow == null) continue;
-            Row destinationRow = destinationSheet.createRow(i);
-            copyRow(sourceRow, destinationRow);
-        }
-    }
 
     private void copyRow(Row sourceRow, Row destinationRow) {
         for (int i = 0; i < sourceRow.getLastCellNum(); i++) {
@@ -236,8 +213,8 @@ public class ExcelHandler {
         }
     }
 
-    private void pasteRow(int targetSheetIndex, int targetRowIndex, Row rowToPaste) {
-        Sheet targetSheet = output.getSheetAt(targetSheetIndex);
+    private void pasteRow(int dstSheet, int targetRowIndex, Row rowToPaste) {
+        Sheet targetSheet = output.getSheetAt(dstSheet);
         Row targetRow = targetSheet.createRow(targetRowIndex);
     
         if (rowToPaste != null) {
@@ -254,79 +231,18 @@ public class ExcelHandler {
         }
     }
 
-    private void copyRowToOutput(int sourceSheetIndex, int sourceRowIndex, int targetSheetIndex, int targetRowIndex) {
-        Sheet sourceSheet = source.getSheetAt(sourceSheetIndex);
-        Sheet targetSheet = output.getSheetAt(targetSheetIndex);
-    
-        Row sourceRow = sourceSheet.getRow(sourceRowIndex);
-        Row targetRow = targetSheet.createRow(targetRowIndex);
-    
-        if (sourceRow != null) {
-            int lastCellNum = sourceRow.getLastCellNum();
-    
-            for (int cellIndex = 0; cellIndex < lastCellNum; cellIndex++) {
-                Cell sourceCell = sourceRow.getCell(cellIndex);
-                Cell targetCell = targetRow.createCell(cellIndex);
-    
-                if (sourceCell != null) {
-                    copyCell(sourceCell, targetCell);
-                }
-            }
-        }
-    }
 
-    private HashMap<Integer, List<Integer>> invertColumnMap(HashMap<Integer, Integer> columnMap) {
+    private HashMap<Integer, List<Integer>> invertcolMap(Map<Integer, Integer> colMap) {
         HashMap<Integer, List<Integer>> invertedMap = new HashMap<>();
-        for (Map.Entry<Integer, Integer> entry : columnMap.entrySet()) {
-            int sourceColumn = entry.getKey();
-            int targetColumn = entry.getValue();
-            invertedMap.putIfAbsent(targetColumn, new ArrayList<>());
-            invertedMap.get(targetColumn).add(sourceColumn);
+        for (Map.Entry<Integer, Integer> entry : colMap.entrySet()) {
+            int srcCol = entry.getKey();
+            int dstCol = entry.getValue();
+            invertedMap.putIfAbsent(dstCol, new ArrayList<>());
+            invertedMap.get(dstCol).add(srcCol);
         }
         return invertedMap;
     }
 
-    private Cell getCell(int sheet, int row, int column) {
-        Sheet currentSheet = source.getSheetAt(sheet);
-        Row currentRow = currentSheet.getRow(row);
-        return currentRow.getCell(column);
-    }
-
-    private void setCell(int sheet, int row, int column, Cell cell) {
-        Sheet currentSheet = output.getSheetAt(sheet);
-        Row currentRow = currentSheet.getRow(row);
-        if (currentRow == null) {
-            currentRow = currentSheet.createRow(row);
-        }
-        Cell newCell = currentRow.createCell(column);
-        newCell.setCellValue(cell.getStringCellValue());
-    }
-
-    private List<Cell> getColumn(int sheet, int column) {
-        Sheet currentSheet = source.getSheetAt(sheet);
-        List<Cell> columnData = new ArrayList<>();
-        for (Row row : currentSheet) {
-            columnData.add(row.getCell(column));
-        }
-        return columnData;
-    }
-
-    private void setColumn(int sheet, int column, List<Cell> cells) {
-        Sheet currentSheet = output.getSheetAt(sheet);
-        for (int i = 0; i < cells.size(); i++) {
-            Row row = currentSheet.getRow(i);
-            if (row == null) {
-                row = currentSheet.createRow(i);
-            }
-            Cell newCell = row.createCell(column);
-            newCell.setCellValue(cells.get(i).getStringCellValue());
-        }
-    }
-
-    private Row getRow(int sheet, int rowIndex) {
-        Sheet currentSheet = source.getSheetAt(sheet);
-        return currentSheet.getRow(rowIndex);
-    }
 
     private void closeWorkbooks() {
         if (source != null) {
