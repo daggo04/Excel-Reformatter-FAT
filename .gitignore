@@ -10,5 +10,9 @@ buildNumber.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
 
+### Testing ###
 test_input/
 test_output/
+
+### VS Code ###
+.vscode/
