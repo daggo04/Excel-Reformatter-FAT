@@ -68,27 +68,39 @@ public class ProfileManager {
         saveProfile(profile);
     }
 
+
     public ArrayList<String> operationsAsPrettyString(String profileName) {
-        Profile profile = loadProfile(profileName);
         ArrayList<String> prettyOperations = new ArrayList<>();
-    
+        Profile profile = loadProfile(profileName);
         if (profile != null) {
+            prettyOperations.add("Profile Name: " + profile.getName());
+            prettyOperations.add("Template Path: " + profile.getTemplatePath());
+            prettyOperations.add("Naming Convention : " + profile.getNamingConvention());
             for (Operation<?> operation : profile.getOperations()) {
-                String operationString = operation.getType().toString() + ": ";
                 Map<String, ?> params = operation.getParameters();
-                
-                for (Map.Entry<String, ?> entry : params.entrySet()) {
-                    operationString += entry.getKey() + " = " + entry.getValue().toString() + ", ";
+                StringBuilder main_sb = new StringBuilder();
+                main_sb.append(operation.getType().toString());
+                main_sb.append(" - ");
+                main_sb.append("Source Sheet: " +params.get("srcSheet"));
+                main_sb.append(" - ");
+                main_sb.append("Destination Sheet: " +params.get("dstSheet"));
+                prettyOperations.add(main_sb.toString());
+                if (operation.getType() == OpType.COPY_SPLIT_ROW) {
+                    @SuppressWarnings("unchecked")
+                    Map<Double, Object> colMap = (Map<Double, Object>) params.get("colMap");
+                    for (Map.Entry<Double, Object> entry : colMap.entrySet()) {
+                        String col_str = ("    Col:" + entry.getKey().toString() + " copy to Col:" + entry.getValue().toString());
+                        prettyOperations.add(col_str);
+                    }
+                }else{
+                    String col_str = ("    Col:" + params.get("srcCol") + " copy to Col:" + params.get("dstCol"));
+                    prettyOperations.add(col_str);
                 }
-                
-                // Remove the trailing comma and space
-                operationString = operationString.substring(0, operationString.length() - 2);
-                prettyOperations.add(operationString);
             }
         }
-        
         return prettyOperations;
     }
+    
 
     private void loadProfileNames() {
         try {

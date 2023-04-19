@@ -3,12 +3,17 @@ package com.eyeshare.Dag.view;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.apache.commons.io.FilenameUtils;
+
 import com.eyeshare.Dag.functionality.ExcelReformatter;
 import com.eyeshare.Dag.profiles.ProfileManager;
+import com.eyeshare.Dag.profiles.NamingConvention;
+import com.eyeshare.Dag.profiles.Profile;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainPanel extends JPanel {
@@ -17,12 +22,15 @@ public class MainPanel extends JPanel {
 
     // Data fields
     private JList<String> sourceFilesList;
-    private DefaultListModel<String> sourceFilesListModel;
+    private DefaultListModel<String> FilesListModel;
+    private File[] selectedFiles;
+    private File destinationFolder;
     private JList<String> operationsList;
     private DefaultListModel<String> operationsListModel;
 
+
     // Components
-    private JScrollPane sourceFilesScrollPane;
+    private JScrollPane FilesScrollPane;
     private JButton chooseFilesButton;
     private JButton chooseDestinationButton;
     private JComboBox<String> profileComboBox;
@@ -30,6 +38,8 @@ public class MainPanel extends JPanel {
     private JButton applyProfileButton;
 
     public MainPanel(ProfileManager profileManager) {
+        this.destinationFolder = new File(System.getProperty("user.home"));
+        this.selectedFiles = new File[0];
         this.profileManager = profileManager;
 
         initComponents();
@@ -38,53 +48,66 @@ public class MainPanel extends JPanel {
     private void initComponents() {
         setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-
+    
         // Source Files List
-        this.sourceFilesListModel = new DefaultListModel<>();
-        this.sourceFilesList = new JList<>(sourceFilesListModel);
-        sourceFilesScrollPane = new JScrollPane(sourceFilesList);
+        this.FilesListModel = new DefaultListModel<>();
+        this.sourceFilesList = new JList<>(FilesListModel);
+        FilesScrollPane = new JScrollPane(sourceFilesList);
+        FilesScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         gbc.gridx = 0;
         gbc.gridy = 0;
-        add(sourceFilesScrollPane, gbc);
-
+        gbc.weightx = 0.5;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        add(FilesScrollPane, gbc);
+    
         // Choose Files Button
         chooseFilesButton = new JButton("Choose Files");
         chooseFilesButton.addActionListener(e -> chooseFiles());
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.NONE;
         add(chooseFilesButton, gbc);
-
+    
         // Choose Destination Button
         chooseDestinationButton = new JButton("Choose Destination");
         chooseDestinationButton.addActionListener(e -> chooseDestination());
         gbc.gridx = 0;
         gbc.gridy = 2;
         add(chooseDestinationButton, gbc);
-
+    
         // Operations List
         operationsListModel = new DefaultListModel<>();
         operationsList = new JList<>(operationsListModel);
         JScrollPane operationsScrollPane = new JScrollPane(operationsList);
+        operationsScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         gbc.gridx = 1;
         gbc.gridy = 0;
+        gbc.weightx = 0.5;
+        gbc.weighty = 1;
+        gbc.fill = GridBagConstraints.BOTH;
         add(operationsScrollPane, gbc);
-
+    
         // Profile ComboBox
         profileComboBox = new JComboBox<>();
-        profileComboBox.addActionListener(e -> onProfileSelectionChanged());   
+        profileComboBox.addActionListener(e -> onProfileSelectionChanged());
         gbc.gridx = 1;
         gbc.gridy = 1;
+        gbc.weightx = 0;
+        gbc.weighty = 0;
+        gbc.fill = GridBagConstraints.NONE;
         add(profileComboBox, gbc);
         updateProfileComboBox();
-        
-
+    
         // Manage Profiles Button
         manageProfilesButton = new JButton("Manage Profiles");
         manageProfilesButton.addActionListener(e -> manageProfiles());
         gbc.gridx = 1;
         gbc.gridy = 2;
         add(manageProfilesButton, gbc);
-
+    
         // Apply Profile Button
         applyProfileButton = new JButton("Apply Profile");
         applyProfileButton.addActionListener(e -> applyProfile());
@@ -105,26 +128,63 @@ public class MainPanel extends JPanel {
     
         int returnValue = fileChooser.showOpenDialog(this);
         if (returnValue == JFileChooser.APPROVE_OPTION) {
-            File[] selectedFiles = fileChooser.getSelectedFiles();
+            selectedFiles = fileChooser.getSelectedFiles();
     
-            // Clear the existing list and add the newly selected files
-            sourceFilesListModel.clear();
-            for (File file : selectedFiles) {
-                sourceFilesListModel.addElement(file.getName());
-            }
+            // Update the FilesListModel
+            updateFilesList();
         }
     }
+    
 
     private void chooseDestination() {
-        // Implement destination folder chooser logic
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Select Destination Folder");
+        fileChooser.setMultiSelectionEnabled(false); // Forbid multiple file selection
+    
+        // Set file selection mode to directories only
+        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+    
+        // Set the destination folder as the chosen directory
+        int returnValue = fileChooser.showOpenDialog(this);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            destinationFolder = fileChooser.getSelectedFile();
+    
+            // Update the FilesListModel
+            updateFilesList();
+        }
     }
+    
+
+    private void updateFilesList() {
+        FilesListModel.clear();
+        FilesListModel.addElement("Destination Folder:");
+        FilesListModel.addElement("    " + destinationFolder.getPath());
+        FilesListModel.addElement("Selected Files:");
+        for (File file : selectedFiles) {
+            FilesListModel.addElement("   " + file.getName());
+        }
+    }
+    
 
     private void manageProfiles() {
         // Switch to ProfileManagementPanel
     }
 
     private void applyProfile() {
-        // Apply the selected profile
+        Profile selectedProfile = profileManager.loadProfile((String) profileComboBox.getSelectedItem());
+    
+        // Iterate over the selected files and apply the profile
+        for (int i = 0; i < selectedFiles.length; i++) {
+            File inputFile = selectedFiles[i];
+            String outputFileName = getOutputFileName(inputFile, selectedProfile.getNamingConvention(), null, i + 1);
+            try {
+                ExcelReformatter reformatter = new ExcelReformatter(inputFile.getAbsolutePath(), selectedProfile);
+                reformatter.applyProfile();
+                reformatter.saveOutputWorkbook(destinationFolder.getAbsolutePath() + "/" + outputFileName);
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "Error processing file: " + inputFile.getName() + "\n" + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     private void updateProfileComboBox() {
@@ -153,5 +213,25 @@ public class MainPanel extends JPanel {
             operationsListModel.addElement(operationString);
         }
     }
+
+    private String getOutputFileName(File inputFile, NamingConvention namingConvention, String customNamePrefix, int fileNumber) {
+        String outputFileName;
+        String fileNameWithoutExtension = FilenameUtils.removeExtension(inputFile.getName());
+        String extension = FilenameUtils.getExtension(inputFile.getName());
+    
+        switch (namingConvention) {
+            case PRESERVE_NAME:
+                outputFileName = fileNameWithoutExtension + "_" + fileNumber + "." + extension;
+                break;
+            case CUSTOM_NAME:
+                outputFileName = customNamePrefix + "_" + fileNumber + "." + extension;
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported naming convention: " + namingConvention);
+        }
+        return outputFileName;
+    }
+
+
     
 }

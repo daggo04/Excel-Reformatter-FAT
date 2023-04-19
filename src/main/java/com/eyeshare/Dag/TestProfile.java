@@ -3,6 +3,7 @@ package com.eyeshare.Dag;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.eyeshare.Dag.profiles.NamingConvention;
 import com.eyeshare.Dag.profiles.OpType;
 import com.eyeshare.Dag.profiles.Operation;
 import com.eyeshare.Dag.profiles.Profile;
@@ -12,7 +13,7 @@ public class TestProfile {
     public static void main(String[] args) {
         ProfileManager profileManager = new ProfileManager();
 
-        Profile profile = new Profile("TestProfile");
+        Profile profile = new Profile("eye-share fakturaavtale");
         profile.setTemplatePath("src/main/resources/templates/NAV_TEMPLATE.xlsx");
 
         // Copy columns to the first sheet

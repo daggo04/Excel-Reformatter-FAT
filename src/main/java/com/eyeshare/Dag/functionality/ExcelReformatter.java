@@ -11,8 +11,11 @@ import com.eyeshare.Dag.profiles.Profile;
 
 public class ExcelReformatter extends ExcelHandler {
 
-    public ExcelReformatter(String sourceFilePath, String templateFilePath) throws IOException {
-        super(sourceFilePath, templateFilePath);
+    private Profile profile;
+
+    public ExcelReformatter(String sourceFilePath, Profile profile) throws IOException {
+        super(sourceFilePath, profile.getTemplatePath());
+        this.profile = profile;
     }
 
 
@@ -20,7 +23,7 @@ public class ExcelReformatter extends ExcelHandler {
      * Applies the given profile to the source workbook using the template workbook if it is provided.
      * @param profile
      */
-    public void applyProfile(Profile profile) {
+    public void applyProfile() {
         for (Operation<?> operation : profile.getOperations()) {
             OpType type = operation.getType();
             Map<String, ?> parameters = operation.getParameters();
