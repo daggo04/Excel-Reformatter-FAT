@@ -213,25 +213,6 @@ public class ExcelHandler {
         }
     }
 
-    private void pasteRow(int dstSheet, int targetRowIndex, Row rowToPaste) {
-        Sheet targetSheet = output.getSheetAt(dstSheet);
-        Row targetRow = targetSheet.createRow(targetRowIndex);
-    
-        if (rowToPaste != null) {
-            int lastCellNum = rowToPaste.getLastCellNum();
-    
-            for (int cellIndex = 0; cellIndex < lastCellNum; cellIndex++) {
-                Cell sourceCell = rowToPaste.getCell(cellIndex);
-                Cell targetCell = targetRow.createCell(cellIndex);
-    
-                if (sourceCell != null) {
-                    copyCell(sourceCell, targetCell);
-                }
-            }
-        }
-    }
-
-
     private HashMap<Integer, List<Integer>> invertcolMap(Map<Integer, Integer> colMap) {
         HashMap<Integer, List<Integer>> invertedMap = new HashMap<>();
         for (Map.Entry<Integer, Integer> entry : colMap.entrySet()) {
