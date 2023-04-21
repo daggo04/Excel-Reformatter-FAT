@@ -1,7 +1,6 @@
 package com.eyeshare.Dag.profiles;
 
 import java.util.Map;
-import java.util.HashMap;
 
 public class Operation<E> {
     private OpType type;
