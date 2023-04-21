@@ -1,30 +1,35 @@
 package com.eyeshare.Dag.view;
 
-import javax.swing.*;
-
-import com.eyeshare.Dag.functionality.ExcelReformatter;
 import com.eyeshare.Dag.profiles.ProfileManager;
+import com.eyeshare.Dag.view.MainPanel;
+import com.eyeshare.Dag.view.ProfileManagementPanel;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class MainFrame extends JFrame {
-    // Managers
     private ProfileManager profileManager;
 
-
     public MainFrame(ProfileManager profileManager) {
-        setTitle("Excel Reformatter");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-
         this.profileManager = profileManager;
 
-        setContentPane(new MainPanel(profileManager)); // Set MainPanel as the default content pane
-        pack(); // Adjust the size according to the components
-        setLocationRelativeTo(null); // Center the frame on the screen
+        setTitle("Dag - Excel Reformatter");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(800, 600);
+        setLocationRelativeTo(null);
+
+        // Set layout to CardLayout
+        getContentPane().setLayout(new CardLayout());
+
+        // Add panels
+        MainPanel mainPanel = new MainPanel(profileManager, this);
+        ProfileManagementPanel profileManagementPanel = new ProfileManagementPanel(profileManager, this);
+        getContentPane().add(mainPanel, "mainPanel");
+        getContentPane().add(profileManagementPanel, "profileManagementPanel");
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            MainFrame mainFrame = new MainFrame(new ProfileManager());
-            mainFrame.setVisible(true);
-        });
+    public void showPanel(String panelName) {
+        CardLayout cardLayout = (CardLayout) getContentPane().getLayout();
+        cardLayout.show(getContentPane(), panelName);
     }
 }

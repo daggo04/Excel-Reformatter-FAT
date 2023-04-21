@@ -8,7 +8,10 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +32,11 @@ public class ProfileManager {
         
         loadProfileNames();
     }
+
+    public Gson getGson() {
+        return gson;
+    }
+
     public List<String> getProfileNames() {
         return profileNames;
     }
@@ -68,6 +76,23 @@ public class ProfileManager {
         saveProfile(profile);
     }
 
+    public boolean profileExists(String name) {
+        return profileNames.contains(name);
+    }
+
+    public void createProfile(String name) {
+        Profile newProfile = new Profile(name);
+        profileNames.add(name);
+        saveProfile(newProfile);
+    }
+
+    public void saveProfile(String name) {
+        Profile profile = loadProfile(name);
+        if (profile != null) {
+            saveProfile(profile);
+        }
+    }
+
 
     public ArrayList<String> operationsAsPrettyString(String profileName) {
         ArrayList<String> prettyOperations = new ArrayList<>();
@@ -100,6 +125,31 @@ public class ProfileManager {
         }
         return prettyOperations;
     }
+
+    public int getOperationIndexFromPrettyStringIndex(String profileName, int prettyStringIndex) {
+        Profile profile = loadProfile(profileName);
+        if (profile != null) {
+            int operationIndex = -1;
+            int currentIndex = 3; // Start from the index after the initial elements (Profile Name, Template Path, and Naming Convention)
+            for (int i = 0; i < profile.getOperations().size(); i++) {
+                if (currentIndex == prettyStringIndex) {
+                    operationIndex = i;
+                    break;
+                }
+                currentIndex++; // Increment for the main operation line
+                Operation<?> operation = profile.getOperations().get(i);
+                if (operation.getType() == OpType.COPY_SPLIT_ROW) {
+                    @SuppressWarnings("unchecked")
+                    Map<Double, Object> colMap = (Map<Double, Object>) operation.getParameters().get("colMap");
+                    currentIndex += colMap.size(); // Increment for each column mapping line
+                } else {
+                    currentIndex++; // Increment for the single column line
+                }
+            }
+            return operationIndex;
+        }
+        return -1;
+    }
     
 
     private void loadProfileNames() {
@@ -127,4 +177,18 @@ public class ProfileManager {
     private String getProfilePath(String name) {
         return PROFILES_DIR + File.separator + name + ".json";
     }
+
+    public List<String> getAvailableTemplates() {
+        List<String> templates = new ArrayList<>();
+        try {
+            URI templatesDirURI = getClass().getResource("/templates").toURI();
+            Path templatesPath = Paths.get(templatesDirURI);
+            Files.newDirectoryStream(templatesPath, path -> path.toString().endsWith(".xls") || path.toString().endsWith(".xlsx"))
+                    .forEach(path -> templates.add(path.getFileName().toString()));
+        } catch (IOException | URISyntaxException e) {
+            System.out.println("Error reading templates directory: " + e.getMessage());
+        }
+        return templates;
+    }
+
 }

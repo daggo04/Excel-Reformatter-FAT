@@ -19,6 +19,7 @@ import java.util.ArrayList;
 public class MainPanel extends JPanel {
     // Managers
     private ProfileManager profileManager;
+    private MainFrame mainFrame;
 
     // Data fields
     private JList<String> sourceFilesList;
@@ -37,7 +38,8 @@ public class MainPanel extends JPanel {
     private JButton manageProfilesButton;
     private JButton applyProfileButton;
 
-    public MainPanel(ProfileManager profileManager) {
+    public MainPanel(ProfileManager profileManager, MainFrame mainFrame) {
+        this.mainFrame = mainFrame;
         this.destinationFolder = new File(System.getProperty("user.home"));
         this.selectedFiles = new File[0];
         this.profileManager = profileManager;
@@ -55,7 +57,7 @@ public class MainPanel extends JPanel {
         g2d.setColor(Color.DARK_GRAY.brighter());
         Rectangle rect = new Rectangle(0, getHeight()-40, getWidth(), getHeight()+20);
         g2d.fill(rect);
-        g2d.drawLine(getWidth()/2, 0, getWidth()/2, getHeight());
+        g2d.drawLine(getWidth()/2, getHeight()- 100, getWidth()/2, getHeight());
 
         
     }
@@ -192,7 +194,7 @@ public class MainPanel extends JPanel {
     
 
     private void manageProfiles() {
-        // Switch to ProfileManagementPanel
+        mainFrame.showPanel("profileManagementPanel");
     }
 
     private void applyProfile() {
