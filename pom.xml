@@ -4,18 +4,27 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-    <!-- Meta Project Properties-->
-    <groupId>com.eyeshare.Dag</groupId>
-    <artifactId>excelreformatter</artifactId>
-    <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
-    <name>excel-reformatter</name>
-    <description>Reformats Excel files to a profiled format</description>
+  <!-- Meta Project Properties-->
+  <groupId>com.eyeshare.Dag</groupId>
+  <artifactId>excelreformatter</artifactId>
+  <packaging>jar</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>excel-reformatter</name>
+  <description>Reformats Excel files to a profiled format</description>
 
   <properties>
       <!-- General project properties -->
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <java.version>17</java.version>
+
+              <!-- Properties required for packaging application as JAR and installer -->
+        <app.main.class>${project.groupId}.Main</app.main.class> <!-- name of main class -->
+        <app.vendor>Dag Himle</app.vendor> <!-- replace with your name -->
+        <app.version>1.0.0</app.version> <!-- version displayed in "about" -->
+        <app.installer.macosx.type>dmg</app.installer.macosx.type> <!-- dmg, pkg -->
+        <app.installer.windows.type>msi</app.installer.windows.type> <!-- msi, exe -->
+        <app.macosx.icon.path>src/main/logo/macosx/logo.icns</app.macosx.icon.path>
+        <app.windows.icon.path>src/main/logo/windows/logo.ico</app.windows.icon.path>
 
       <!-- Library and plugin versions -->
       <junit.version>5.9.1</junit.version>
@@ -53,4 +62,81 @@
     </dependency> 
     
   </dependencies>
+
+  <build>
+    <plugins>
+        <!-- Other plugins -->
+
+        <!-- Create a custom Java runtime image using the jlink plugin -->
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jlink-plugin</artifactId>
+            <version>3.0.0-alpha-1</version>
+            <extensions>true</extensions>
+            <configuration>
+                <modulePaths>
+                    <modulePath>${project.build.directory}/jlinkbase/modules</modulePath>
+                </modulePaths>
+                <launcher>excel-reformatter=${project.groupId}/${project.artifactId}:${app.main.class}</launcher>
+                <addOptions>
+                    <option>--strip-debug</option>
+                    <option>--no-header-files</option>
+                    <option>--no-man-pages</option>
+                </addOptions>
+            </configuration>
+            <executions>
+                <execution>
+                    <id>create-runtime-image</id>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>jlink</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+        
+        <!-- Create installer packages using the jpackage tool -->
+        <plugin>
+            <groupId>org.moditect</groupId>
+            <artifactId>moditect-maven-plugin</artifactId>
+            <version>1.0.0.RC2</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>jpackage</goal>
+                    </goals>
+                    <configuration>
+                        <module>${project.groupId}.${project.artifactId}</module>
+                        <executable>excel-reformatter</executable>
+                        <appVersion>${app.version}</appVersion>
+                        <launcher>excel-reformatter=${app.main.class}</launcher>
+                        <icon>${app.windows.icon.path}</icon>
+                        <outputDirectory>${project.build.directory}/jpackage</outputDirectory>
+                        <installDirectory>${project.build.directory}/jpackage-installer</installDirectory>
+                        <runtimeImage>${project.build.directory}/jlink-image</runtimeImage>
+                        <skipInstaller>false</skipInstaller>
+                        <fileAssociations>
+                            <!-- Add file associations if needed -->
+                        </fileAssociations>
+                        <options>
+                            <option>--win-console</option>
+                        </options>
+                        <macOS>
+                            <icon>${app.macosx.icon.path}</icon>
+                            <packageName>${project.groupId}.${project.artifactId}</packageName>
+                            <targetFormat>${app.installer.macosx.type}</targetFormat>
+                        </macOS>
+                        <windows>
+                            <icon>${app.windows.icon.path}</icon>
+                            <packageName>${project.groupId}.${project.artifactId}</packageName>
+                            <installerType>${app.installer.windows.type}</installerType>
+                        </windows>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+    </plugins>
+  </build>
+
 </project>
