@@ -76,7 +76,7 @@
           <configuration>
               <launcher>excel-reformatter=${project.groupId}.${project.artifactId}/${app.main.class}</launcher>
               <modulePaths>
-                  <modulePath>${project.build.directory}/jlinkbase/modules</modulePath>
+                <path>${project.build.directory}/jlinkbase/modules</path>
               </modulePaths>
               <addOptions>
                   <option>--strip-debug</option>
@@ -96,47 +96,6 @@
           </executions>
       </plugin>
         
-        <!-- Create installer packages using the jpackage tool -->
-        <plugin>
-            <groupId>org.moditect</groupId>
-            <artifactId>moditect-maven-plugin</artifactId>
-            <version>1.0.0.RC2</version>
-            <executions>
-                <execution>
-                    <phase>package</phase>
-                    <goals>
-                        <goal>jpackage</goal>
-                    </goals>
-                    <configuration>
-                        <module>${project.groupId}.${project.artifactId}</module>
-                        <executable>excel-reformatter</executable>
-                        <appVersion>${app.version}</appVersion>
-                        <launcher>excel-reformatter=${app.main.class}</launcher>
-                        <icon>${app.windows.icon.path}</icon>
-                        <outputDirectory>${project.build.directory}/jpackage</outputDirectory>
-                        <installDirectory>${project.build.directory}/jpackage-installer</installDirectory>
-                        <runtimeImage>${project.build.directory}/jlink-image</runtimeImage>
-                        <skipInstaller>false</skipInstaller>
-                        <fileAssociations>
-                            <!-- Add file associations if needed -->
-                        </fileAssociations>
-                        <options>
-                            <option>--win-console</option>
-                        </options>
-                        <macOS>
-                            <icon>${app.macosx.icon.path}</icon>
-                            <packageName>${project.groupId}.${project.artifactId}</packageName>
-                            <targetFormat>${app.installer.macosx.type}</targetFormat>
-                        </macOS>
-                        <windows>
-                            <icon>${app.windows.icon.path}</icon>
-                            <packageName>${project.groupId}.${project.artifactId}</packageName>
-                            <installerType>${app.installer.windows.type}</installerType>
-                        </windows>
-                    </configuration>
-                </execution>
-            </executions>
-        </plugin>
         
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
