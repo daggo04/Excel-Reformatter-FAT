@@ -4,8 +4,8 @@ import com.eyeshare.Dag.profiles.OpType;
 import com.eyeshare.Dag.profiles.Operation;
 import com.eyeshare.Dag.profiles.Profile;
 import com.eyeshare.Dag.profiles.ProfileManager;
+
 import com.google.gson.JsonSyntaxException;
-import com.eyeshare.Dag.profiles.ProfileManager;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
@@ -19,7 +19,6 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;

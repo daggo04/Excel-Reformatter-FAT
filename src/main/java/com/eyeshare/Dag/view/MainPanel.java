@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.apache.commons.io.FilenameUtils;
 
 import com.eyeshare.Dag.functionality.ExcelReformatter;
 import com.eyeshare.Dag.profiles.ProfileManager;
@@ -243,8 +242,10 @@ public class MainPanel extends JPanel {
 
     private String getOutputFileName(File inputFile, NamingConvention namingConvention, String customNamePrefix, int fileNumber) {
         String outputFileName;
-        String fileNameWithoutExtension = FilenameUtils.removeExtension(inputFile.getName());
-        String extension = FilenameUtils.getExtension(inputFile.getName());
+        String fileName = inputFile.getName();
+        int extensionIndex = fileName.lastIndexOf('.');
+        String fileNameWithoutExtension = extensionIndex == -1 ? fileName : fileName.substring(0, extensionIndex);
+        String extension = extensionIndex == -1 ? "" : fileName.substring(extensionIndex + 1);
     
         switch (namingConvention) {
             case PRESERVE_NAME:

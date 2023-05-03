@@ -1,8 +1,6 @@
 package com.eyeshare.Dag.view;
 
 import com.eyeshare.Dag.profiles.ProfileManager;
-import com.eyeshare.Dag.view.MainPanel;
-import com.eyeshare.Dag.view.ProfileManagementPanel;
 
 import javax.swing.*;
 import java.awt.*;

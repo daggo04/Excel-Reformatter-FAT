@@ -2,7 +2,6 @@ package com.eyeshare.Dag;
 
 import javax.swing.SwingUtilities;
 
-import com.eyeshare.Dag.functionality.ExcelReformatter;
 import com.eyeshare.Dag.profiles.ProfileManager;
 import com.eyeshare.Dag.view.MainFrame;
 
