@@ -18,10 +18,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
+/**
+ * ProfileManager
+ * Manages the profiles
+ * Singleton class
+ */
 public class ProfileManager {
     private static final String PROFILES_DIR = "src/main/resources/profiles";
     private List<String> profileNames;
     private Gson gson;
+
 
     public ProfileManager() {
         this.profileNames = new ArrayList<>();
@@ -33,15 +40,28 @@ public class ProfileManager {
         loadProfileNames();
     }
 
+    /**
+     * Get the GSON object used to serialize and deserialize profiles
+     * @return
+     */
     public Gson getGson() {
         return gson;
     }
 
+    /**
+     * Get a List of of all profile names as Strings
+     * @return
+     */
     public List<String> getProfileNames() {
         return profileNames;
     }
 
 
+    /**
+     * Given a profile name as a String returns a {@link Profile} object representing the profile
+     * @param name
+     * @return Profile
+     */
     public Profile loadProfile(String name) {
         try {
             FileReader reader = new FileReader(getProfilePath(name));
@@ -58,11 +78,20 @@ public class ProfileManager {
         }
     }
 
+    /**
+     * Adds a profile to the list of profiles and saves it to a file
+     * @param profile
+     */
     public void addProfile(Profile profile) {
         profileNames.add(profile.getName());
         saveProfile(profile);
     }
 
+    /**
+     * Given the name of a proifle as a String.
+     * Removes a profile from the list of profiles and deletes the file
+     * @param name
+     */
     public void removeProfile(String name) {
         profileNames.remove(name);
         try {
@@ -72,20 +101,41 @@ public class ProfileManager {
         }
     }
 
+    /**
+     * Given a profile as a {@link Profile} object.
+     * Saves the profile to a file
+     * @param profile
+     */
     public void updateProfile(Profile profile) {
         saveProfile(profile);
     }
 
+    
+    /**
+     * Checks if a profile exists given a profile name as a String
+     * Retruns true if the profile exists, false otherwise
+     * @param name
+     * @return
+     */
     public boolean profileExists(String name) {
         return profileNames.contains(name);
     }
 
+    /**
+     * Given a profile name as a String.
+     * creates a new profile with the given name and saves it to a file
+     */
     public void createProfile(String name) {
         Profile newProfile = new Profile(name);
         profileNames.add(name);
         saveProfile(newProfile);
     }
 
+    /**
+     * Given a profile as a {@link Profile} object.
+     * Saves the profile to a file
+     * @param profile
+     */
     public void saveProfile(String name) {
         Profile profile = loadProfile(name);
         if (profile != null) {
@@ -94,6 +144,13 @@ public class ProfileManager {
     }
 
 
+    /**
+     * Given the name of a profile as a String.
+     * Loads the profile and reformats it as a pretty String and returns it
+     * The pretty String is used to display the profile in the GUI
+     * @param profileName
+     * @return
+     */
     public ArrayList<String> operationsAsPrettyString(String profileName) {
         ArrayList<String> prettyOperations = new ArrayList<>();
         Profile profile = loadProfile(profileName);
@@ -125,7 +182,15 @@ public class ProfileManager {
         }
         return prettyOperations;
     }
-
+    
+    /**
+     * Given a profile name as a String and an index of a line in the pretty string of the profile
+     * Returns the index of the operation in the profile that corresponds to the line in the pretty string
+     * The pretty String is used to display the profile in the GUI
+     * @param profileName
+     * @param prettyStringIndex
+     * @return operationIndex
+     */
     public int getOperationIndexFromPrettyStringIndex(String profileName, int prettyStringIndex) {
         Profile profile = loadProfile(profileName);
         if (profile != null) {
@@ -150,8 +215,24 @@ public class ProfileManager {
         }
         return -1;
     }
-    
 
+    /**
+     * Returns a list of all avaialble templates in the templates directory
+     * @return
+     */
+    public List<String> getAvailableTemplates() {
+        List<String> templates = new ArrayList<>();
+        try {
+            URI templatesDirURI = getClass().getResource("/templates").toURI();
+            Path templatesPath = Paths.get(templatesDirURI);
+            Files.newDirectoryStream(templatesPath, path -> path.toString().endsWith(".xls") || path.toString().endsWith(".xlsx"))
+                    .forEach(path -> templates.add(path.getFileName().toString()));
+        } catch (IOException | URISyntaxException e) {
+            System.out.println("Error reading templates directory: " + e.getMessage());
+        }
+        return templates;
+    }
+    
     private void loadProfileNames() {
         try {
             Files.createDirectories(Paths.get(PROFILES_DIR));
@@ -178,17 +259,5 @@ public class ProfileManager {
         return PROFILES_DIR + File.separator + name + ".json";
     }
 
-    public List<String> getAvailableTemplates() {
-        List<String> templates = new ArrayList<>();
-        try {
-            URI templatesDirURI = getClass().getResource("/templates").toURI();
-            Path templatesPath = Paths.get(templatesDirURI);
-            Files.newDirectoryStream(templatesPath, path -> path.toString().endsWith(".xls") || path.toString().endsWith(".xlsx"))
-                    .forEach(path -> templates.add(path.getFileName().toString()));
-        } catch (IOException | URISyntaxException e) {
-            System.out.println("Error reading templates directory: " + e.getMessage());
-        }
-        return templates;
-    }
 
 }

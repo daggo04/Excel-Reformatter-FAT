@@ -2,6 +2,11 @@ package com.eyeshare.Dag.profiles;
 
 import java.util.Map;
 
+
+/**
+ * Operation
+ * Object representing a single operation to be performed on a spreadsheet
+ */
 public class Operation<E> {
     private OpType type;
     private Map<String, E> parameters;
@@ -13,18 +18,34 @@ public class Operation<E> {
     }
 
     // Getters and setters
+    /**
+     * Get the type of the operation
+     * @return
+     */
     public OpType getType() {
         return type;
     }
 
+    /**
+     * Set the type of the operation
+     * @param type
+     */
     public void setType(OpType type) {
         this.type = type;
     }
 
+    /**
+     * Get the parameters for the operation
+     * @return Map<String, E> parameters
+     */
     public Map<String, E> getParameters() {
         return parameters;
     }
 
+    /**
+     * Set the parameters for the operation
+     * @param parameters
+     */
     public void setParameters(Map<String, E> parameters) {
         this.parameters = parameters;
     }
