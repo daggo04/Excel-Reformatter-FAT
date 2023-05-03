@@ -1,6 +1,5 @@
 # Excel Automation Tool
 ## Overview
-(Most of this readme was written by chat-GPT. I just edited it a bit.)
 
 This Excel Automation Tool is a Java-based desktop application that streamlines the process of manipulating Excel files. It allows users to create and manage profiles containing operations, which perform a variety of tasks on Excel files, such as copying, splitting rows, and more. The tool provides an easy-to-use graphical user interface that simplifies the task of managing and applying these operations to Excel files. The point of the application is to convert excel files from one format to another. An otherwise tedious and time-consuming process is made simple and efficient with this tool.
 
