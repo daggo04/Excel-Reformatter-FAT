@@ -1,4 +1,5 @@
-# Excel Automation Tool
+# Excel Automation Tool | FAT JAR version
+This is an alternate version of my orginal project https://github.com/daggo04/Excel-Reformater that utilises a Fat Jar for deployment. This is a temporary solution until I can create sudo automatic modules for the required modules. 
 ## Overview
 
 This Excel Automation Tool is a Java-based desktop application that streamlines the process of manipulating Excel files. It allows users to create and manage profiles containing operations, which perform a variety of tasks on Excel files, such as copying, splitting rows, and more. The tool provides an easy-to-use graphical user interface that simplifies the task of managing and applying these operations to Excel files. The point of the application is to convert excel files from one format to another. An otherwise tedious and time-consuming process is made simple and efficient with this tool.
