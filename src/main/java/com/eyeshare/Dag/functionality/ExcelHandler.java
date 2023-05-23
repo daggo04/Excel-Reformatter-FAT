@@ -8,7 +8,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-
+import java.io.InputStream;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -46,7 +46,7 @@ public class ExcelHandler {
     public ExcelHandler(String sourceFilePath, String templateFilePath) throws IOException {
             try {
         FileInputStream sourceInputStream = new FileInputStream(sourceFilePath);
-        FileInputStream templateInputStream = new FileInputStream(templateFilePath);
+        InputStream templateInputStream = ExcelHandler.class.getResourceAsStream("/templates/NAV_TEMPLATE copy.xlsx");
         this.source = WorkbookFactory.create(sourceInputStream);
         this.template = WorkbookFactory.create(templateInputStream);
 
