@@ -65,81 +65,28 @@
   </dependencies>
   <build>
     <plugins>
-        <!-- Other plugins -->
 
         <!-- Create a custom Java runtime image using the jlink plugin -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jlink-plugin</artifactId>
-          <version>3.1.0</version>
-          <extensions>true</extensions>
-          <configuration>
-              <launcher>excel-reformatter=${project.groupId}.${project.artifactId}/${app.main.class}</launcher>
-              <modulePaths>
-                  <modulePath>${project.build.directory}/jlinkbase/modules</modulePath>
-              </modulePaths>
-              <addOptions>
-                  <option>--strip-debug</option>
-                  <option>--no-header-files</option>
-                  <option>--no-man-pages</option>
-                  <option>--bind-services</option>
-              </addOptions>
-              <jlinkwrapper>
-                  <wrappers>
-                      <wrapper>
-                          <moduleName>commons.math3</moduleName>
-                          <automaticModuleName>commons.math3</automaticModuleName>
-                      </wrapper>
-                  </wrappers>
-              </jlinkwrapper>
-          </configuration>
-          <executions>
-              <execution>
-                  <id>create-runtime-image</id>
-                  <phase>package</phase>
-                  <goals>
-                      <goal>jlink</goal>
-                  </goals>
-              </execution>
-          </executions>
+      <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.2.4</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>shade</goal>
+                    </goals>
+                    <configuration>
+                        <transformers>
+                            <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <mainClass>${app.main.class}</mainClass>
+                            </transformer>
+                        </transformers>
+                    </configuration>
+                </execution>
+            </executions>
         </plugin>
-        
-        
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>3.0.0</version>
-          <executions>
-              <execution>
-                  <id>create-installers</id>
-                  <phase>package</phase>
-                  <goals>
-                      <goal>exec</goal>
-                  </goals>
-                  <configuration>
-                      <executable>jpackage</executable>
-                      <arguments>
-                          <argument>--type</argument>
-                          <argument>${app.installer.windows.type}</argument>
-                          <argument>--name</argument>
-                          <argument>excel-reformatter</argument>
-                          <argument>--app-version</argument>
-                          <argument>${app.version}</argument>
-                          <argument>--input</argument>
-                          <argument>${project.build.directory}/jlink-image</argument>
-                          <argument>--output</argument>
-                          <argument>${project.build.directory}/jpackage</argument>
-                          <argument>--main-jar</argument>
-                          <argument>${project.build.finalName}.jar</argument>
-                          <argument>--main-class</argument>
-                          <argument>${app.main.class}</argument>
-                          <argument>--icon</argument>
-                          <argument>${app.windows.icon.path}</argument>
-                      </arguments>
-                  </configuration>
-              </execution>
-          </executions>
-      </plugin>
     </plugins>
   </build>
 

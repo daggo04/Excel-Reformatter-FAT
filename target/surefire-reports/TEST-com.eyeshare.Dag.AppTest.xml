@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.eyeshare.Dag.AppTest" time="0.036" tests="1" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="java.specification.version" value="20"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/Users/dag/Prog/Prosjekter/FAT_Exel_Reformatter/Excel-Reformatter-FAT/target/test-classes:/Users/dag/Prog/Prosjekter/FAT_Exel_Reformatter/Excel-Reformatter-FAT/target/classes:/Users/dag/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar:/Users/dag/.m2/repository/org/apache/poi/poi-ooxml/5.2.3/poi-ooxml-5.2.3.jar:/Users/dag/.m2/repository/org/apache/poi/poi/5.2.3/poi-5.2.3.jar:/Users/dag/.m2/repository/commons-codec/commons-codec/1.15/commons-codec-1.15.jar:/Users/dag/.m2/repository/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar:/Users/dag/.m2/repository/com/zaxxer/SparseBitSet/1.2/SparseBitSet-1.2.jar:/Users/dag/.m2/repository/org/apache/poi/poi-ooxml-lite/5.2.3/poi-ooxml-lite-5.2.3.jar:/Users/dag/.m2/repository/org/apache/xmlbeans/xmlbeans/5.1.1/xmlbeans-5.1.1.jar:/Users/dag/.m2/repository/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar:/Users/dag/.m2/repository/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar:/Users/dag/.m2/repository/com/github/virtuald/curvesapi/1.07/curvesapi-1.07.jar:/Users/dag/.m2/repository/org/apache/logging/log4j/log4j-api/2.18.0/log4j-api-2.18.0.jar:/Users/dag/.m2/repository/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar:/Users/dag/.m2/repository/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar:"/>
+    <property name="java.vm.vendor" value="Homebrew"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://github.com/Homebrew/homebrew-core/issues"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="java.vm.specification.version" value="20"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="GB"/>
+    <property name="sun.boot.library.path" value="/usr/local/Cellar/openjdk/20.0.1/libexec/openjdk.jdk/Contents/Home/lib"/>
+    <property name="sun.java.command" value="/Users/dag/Prog/Prosjekter/FAT_Exel_Reformatter/Excel-Reformatter-FAT/target/surefire/surefirebooter-20230523114217658_3.jar /Users/dag/Prog/Prosjekter/FAT_Exel_Reformatter/Excel-Reformatter-FAT/target/surefire 2023-05-23T11-42-17_498-jvmRun1 surefire-20230523114217658_1tmp surefire_0-20230523114217658_2tmp"/>
+    <property name="http.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/Users/dag/Prog/Prosjekter/FAT_Exel_Reformatter/Excel-Reformatter-FAT/target/test-classes:/Users/dag/Prog/Prosjekter/FAT_Exel_Reformatter/Excel-Reformatter-FAT/target/classes:/Users/dag/.m2/repository/junit/junit/3.8.1/junit-3.8.1.jar:/Users/dag/.m2/repository/org/apache/poi/poi-ooxml/5.2.3/poi-ooxml-5.2.3.jar:/Users/dag/.m2/repository/org/apache/poi/poi/5.2.3/poi-5.2.3.jar:/Users/dag/.m2/repository/commons-codec/commons-codec/1.15/commons-codec-1.15.jar:/Users/dag/.m2/repository/org/apache/commons/commons-math3/3.6.1/commons-math3-3.6.1.jar:/Users/dag/.m2/repository/com/zaxxer/SparseBitSet/1.2/SparseBitSet-1.2.jar:/Users/dag/.m2/repository/org/apache/poi/poi-ooxml-lite/5.2.3/poi-ooxml-lite-5.2.3.jar:/Users/dag/.m2/repository/org/apache/xmlbeans/xmlbeans/5.1.1/xmlbeans-5.1.1.jar:/Users/dag/.m2/repository/org/apache/commons/commons-compress/1.21/commons-compress-1.21.jar:/Users/dag/.m2/repository/commons-io/commons-io/2.11.0/commons-io-2.11.0.jar:/Users/dag/.m2/repository/com/github/virtuald/curvesapi/1.07/curvesapi-1.07.jar:/Users/dag/.m2/repository/org/apache/logging/log4j/log4j-api/2.18.0/log4j-api-2.18.0.jar:/Users/dag/.m2/repository/org/apache/commons/commons-collections4/4.4/commons-collections4-4.4.jar:/Users/dag/.m2/repository/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/dag"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2023-04-18"/>
+    <property name="java.home" value="/usr/local/Cellar/openjdk/20.0.1/libexec/openjdk.jdk/Contents/Home"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/Users/dag/Prog/Prosjekter/FAT_Exel_Reformatter/Excel-Reformatter-FAT"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="apple.awt.application.name" value="ForkedBooter"/>
+    <property name="surefire.real.class.path" value="/Users/dag/Prog/Prosjekter/FAT_Exel_Reformatter/Excel-Reformatter-FAT/target/surefire/surefirebooter-20230523114217658_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="ftp.nonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.runtime.version" value="20.0.1"/>
+    <property name="user.name" value="dag"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="12.6.2"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="java.vendor.version" value="Homebrew"/>
+    <property name="localRepository" value="/Users/dag/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://github.com/Homebrew/homebrew-core/issues"/>
+    <property name="java.io.tmpdir" value="/var/folders/49/9112r8d129s1dbxc3_v77x0r0000gn/T/"/>
+    <property name="java.version" value="20.0.1"/>
+    <property name="user.dir" value="/Users/dag/Prog/Prosjekter/FAT_Exel_Reformatter/Excel-Reformatter-FAT"/>
+    <property name="os.arch" value="x86_64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/dag/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vendor" value="Homebrew"/>
+    <property name="java.vm.version" value="20.0.1"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="socksNonProxyHosts" value="local|*.local|169.254/16|*.169.254/16"/>
+    <property name="java.class.version" value="64.0"/>
+  </properties>
+  <testcase name="testApp" classname="com.eyeshare.Dag.AppTest" time="0.005"/>
+</testsuite>
