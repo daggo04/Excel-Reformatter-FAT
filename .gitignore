@@ -16,3 +16,6 @@ test_output/
 
 ### VS Code ###
 .vscode/
+
+.DS_Store
+.DS_Store
